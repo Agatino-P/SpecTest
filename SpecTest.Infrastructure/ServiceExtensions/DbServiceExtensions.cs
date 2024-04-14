@@ -10,6 +10,7 @@ public static class DbServiceExtensions
     {
         services.AddDbContext<SpecTestDbContext>();
         services.AddTransient<IPersonRepository, PersonRepository>();
+        services.AddTransient<ISpecPersonRepository, SpecPersonRepository>();
         return services;
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SpecTest.Domain.Model;
 using SpecTest.Domain.Ports;
+using SpecTest.Infrastructure.Repositories;
 
 namespace SpecTest.Api.Controllers;
 [ApiController]
@@ -9,11 +9,13 @@ namespace SpecTest.Api.Controllers;
 public class PersonController : ControllerBase
 {
     private readonly IPersonRepository personRepository;
+    private readonly ISpecPersonRepository specPersonRepository;
     private readonly ILogger<PersonController> _logger;
 
-    public PersonController(IPersonRepository personRepository, ILogger<PersonController> logger)
+    public PersonController(IPersonRepository personRepository, ISpecPersonRepository specPersonRepository, ILogger<PersonController> logger)
     {
         this.personRepository = personRepository;
+        this.specPersonRepository = specPersonRepository;
         _logger = logger;
     }
 
@@ -31,6 +33,12 @@ public class PersonController : ControllerBase
         return person == null ? NotFound() : Ok(person);
     }
 
+    [HttpGet("by-spec-fname/{first}")]
+    public async Task<IActionResult> GetBySpecId(string first)
+    {
+        Person? person = await specPersonRepository.GetByFirst(first);
+        return person == null ? NotFound() : Ok(person);
+    }
 
 
     [HttpGet]
