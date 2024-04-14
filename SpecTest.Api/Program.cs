@@ -33,8 +33,11 @@ public class Program
 
 
         app.MapControllers();
-        //SpecTestDbContext? dbContext = app.Services.GetService<SpecTestDbContext>();
-        new SpecTestDbContext().Database.EnsureDeleted(); 
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    SpecTestDbContext? dbContext = app.Services.GetService<SpecTestDbContext>();
+        //}
+
         new SpecTestDbContext().Database.EnsureCreated();
         app.Run();
     }

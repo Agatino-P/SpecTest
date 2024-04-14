@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SpecTest.Domain.Model;
 using SpecTest.Domain.Ports;
 
@@ -16,16 +17,33 @@ public class PersonController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet(Name = "GetPeople")]
-    public async Task<IList<Person>> GetAll()
+    [HttpGet("by-id/{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        return await personRepository.GetAll();
+        Person? person = await personRepository.Get(id);
+        return person == null ? NotFound() : Ok(person);
     }
 
-    [HttpPost(Name = "AddPerson")]
-    public async Task Add(Person person)
+    [HttpGet("by-fname/{fname}")]
+    public async Task<IActionResult> GetById(string fname)
+    {
+        Person? person = await personRepository.GetByFName(fname);
+        return person == null ? NotFound() : Ok(person);
+    }
+
+
+
+    [HttpGet]
+        public async Task<IActionResult> GetAll()
+    {
+        return Ok(await personRepository.GetAll());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Add(Person person)
     {
         await personRepository.Add(person);
+        return Ok(person);
     }
 
 }

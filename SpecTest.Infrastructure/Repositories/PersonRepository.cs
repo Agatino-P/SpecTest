@@ -27,4 +27,10 @@ public class PersonRepository : IPersonRepository
     {
         return await dbContex.PersonSet.ToListAsync();
     }
+
+    public async Task<Person?> GetByFName(string fname)
+    {
+        Person? person = await dbContex.PersonSet.FirstOrDefaultAsync(p => p.First == fname);
+        return person;
+    }
 }
